@@ -9,7 +9,8 @@ const defaultInstallOpt = {
 const AntdComponent = [
   Button,
   Input,
-  Form
+  Form,
+  Form.Item // 没有直接导出 FormItem, FormItem 是和 Form 捆绑在一起导出的
 ]
 
 export default {

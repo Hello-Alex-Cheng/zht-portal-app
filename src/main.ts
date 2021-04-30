@@ -12,7 +12,7 @@ import AntdComponent from './components/AntdComponent'
 import './permissions'
 
 // 第二个参数是 props
-createApp(
+const Vue = createApp(
   App
 )
 .use(AntdComponent)

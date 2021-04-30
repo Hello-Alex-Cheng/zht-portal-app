@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <div class="login-box">
+      <h1>hello_AlexCc</h1>
       <a-form
         layout="inline"
         :model="formState"
@@ -28,7 +29,6 @@
         </a-form-item>
       </a-form>
     </div>
-    <Test></Test>
   </div>
 </template>
 
@@ -37,8 +37,9 @@
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
 import { defineComponent, reactive, UnwrapRef  } from 'vue'
+import { AxiosResponse } from 'axios'
+import { message } from 'ant-design-vue'
 
-import Test from '@/views/test/index.vue'
 import { portalLogin } from '@/api/login'
 
 interface FormState {
@@ -46,30 +47,35 @@ interface FormState {
   password: string
 }
 
+interface ApiResponse extends AxiosResponse {
+  code: number,
+  msg: string,
+  data: any
+}
+
 export default defineComponent({
   name: 'Login',
   components: {
     UserOutlined,
-    LockOutlined,
-    Test
+    LockOutlined
   },
   setup() {
+    // export declare type UnwrapRef<T> = T extends Ref<infer V> ? UnwrapRefSimple<V> : UnwrapRefSimple<T>;
     const formState: UnwrapRef<FormState> = reactive({
-      user: '',
-      password: ''
+      user: 'ztadmin',
+      password: 'aa123456'
     })
 
-    const handleFinish = (values: FormState) => {
-      console.log(values, formState);
+    const handleFinish = async (values: FormState) => {
+      console.log(values, formState)
 
-      portalLogin('zht_password', formState.user, formState.password)
-        // @ts-ignore
-        .then(res => {
-          console.log(res)
-          // @ts-ignore
-        }).catch(err => {
-          console.log(err)
-        })
+      const res: AxiosResponse = await portalLogin('zht_password', formState.user, formState.password)
+      if ((res as ApiResponse).code === 0) {
+        message.success('登录成功!')
+        console.log(res.data)
+      } else {
+        console.log('业务代码报错', res)
+      }
     }
     const handleFinishFailed = (errors: ValidateErrorEntity<FormState>) => {
       console.log(errors);
@@ -88,11 +94,24 @@ export default defineComponent({
 .login {
   width: 100%;
   height: 100vh;
-  background-color: aquamarine;
+  background-color: #ccc;
+  background-image: url('../../assets/senlin.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .login-box {
-    width: 400px;
-    margin: 0 auto;
-    background-color: #fff;
+    overflow: hidden;
+    display: inline-block;
+    padding: 50px 20px;
+    background-color: rgba(225, 225, 225, .5);
+    margin-top: -240px;
+  }
+  .login-box > h1 {
+    letter-spacing: -0.02;
+    text-transform: capitalize;
+    color: #333;
   }
 }
 </style>

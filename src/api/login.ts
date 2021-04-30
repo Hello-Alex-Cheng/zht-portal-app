@@ -1,4 +1,4 @@
-import request from '../utils/request'
+import request from '@/utils/request'
 import configs from '../configs'
 
 export const portalLogin = (type: string, username: string, password: string) => {
