@@ -1,15 +1,16 @@
 <template>
-  <router-view></router-view>
+  <div class="test">
+    test
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'App',
-  components: {}
-})
+  name: 'Test'
+});
 </script>
 
-<style lang="less">
+<style>
 </style>
