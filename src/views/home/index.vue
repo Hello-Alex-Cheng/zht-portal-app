@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    home123
+    <h1>Portal content</h1>
+    <h1>Portal content</h1>
+    <h1>Portal content</h1>
+    <h1>Portal content</h1>
+    <h1>Portal content</h1>
   </div>
 </template>
 

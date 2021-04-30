@@ -14,9 +14,11 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    if (getToken()) {
+    if (!config!.url!.includes('auth/social/token')) {
       const TOKEN = getToken()
-      config.headers.Authorization = 'Bearer ' + TOKEN
+      if (TOKEN) {
+        config.headers.Authorization = TOKEN
+      }
     }
     return config
   },

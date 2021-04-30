@@ -1,109 +1,156 @@
 <template>
-  <div class="hello">
-    <a-layout id="components-layout-demo-custom-trigger">
-			<a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-				<div class="logo" />
-				<div class="side-menu">
-					<a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
-						<a-menu-item v-for="item in subAppLists" :key="item.homePath">
-							<router-link :to="item.homePath">
-								<a-icon type="user" />
-								<span>{{item.name}}</span>
-							</router-link>
-						</a-menu-item>
-					</a-menu>
+  <div class="layout">
+    <a-layout>
+			<a-layout-header class="header">
+				<div class="logo">
+					hello_AlexCc
 				</div>
-			</a-layout-sider>
+				<div class="header">
+					<a-button type="default" size="small">导航1</a-button>
+					<a-button type="default" size="small">导航2</a-button>
+					<a-button type="default" size="small">导航3</a-button>
+					<a-button class="logout" type="danger" size="small" @click="logoutExcutor">退出</a-button>
+				</div>
+			</a-layout-header>
 			<a-layout>
-				<a-layout-header style="background: #fff; padding: 0">
-					<a-icon
-						class="trigger"
-						:type="collapsed ? 'menu-unfold' : 'menu-fold'"
-						@click="() => (collapsed = !collapsed)"
-					/>
-          <h3>头部</h3>
-				</a-layout-header>
-				<a-layout-content
-					:style="{ margin: '24px 16px', padding: '24px', background: '#fff' }"
-				>
-					<!-- 主体内容渲染部分 -->
-					<router-view></router-view>
-
-					<!-- 子应用入口 -->
-					<div id="subAppContainer"></div>
-				</a-layout-content>
+				<a-layout-sider width="200" style="background: #fff">
+					<a-menu
+						mode="inline"
+						v-model:selectedKeys="selectedKeys2"
+						v-model:openKeys="openKeys"
+						:style="{ height: '100%', borderRight: 0 }"
+					>
+						<a-sub-menu key="sub1">
+							<template #title>
+								<span>
+									<user-outlined />
+									subnav 1
+								</span>
+							</template>
+							<a-menu-item key="1">option1</a-menu-item>
+							<a-menu-item key="2">option2</a-menu-item>
+							<a-menu-item key="3">option3</a-menu-item>
+							<a-menu-item key="4">option4</a-menu-item>
+						</a-sub-menu>
+						<a-sub-menu key="sub2">
+							<template #title>
+								<span>
+									<laptop-outlined />
+									subnav 2
+								</span>
+							</template>
+							<a-menu-item key="5">option5</a-menu-item>
+							<a-menu-item key="6">option6</a-menu-item>
+							<a-menu-item key="7">option7</a-menu-item>
+							<a-menu-item key="8">option8</a-menu-item>
+						</a-sub-menu>
+						<a-sub-menu key="sub3">
+							<template #title>
+								<span>
+									<notification-outlined />
+									subnav 3
+								</span>
+							</template>
+							<a-menu-item key="9">option9</a-menu-item>
+							<a-menu-item key="10">option10</a-menu-item>
+							<a-menu-item key="11">option11</a-menu-item>
+							<a-menu-item key="12">option12</a-menu-item>
+						</a-sub-menu>
+					</a-menu>
+				</a-layout-sider>
+				<a-layout style="padding: 0 24px 24px">
+					<a-breadcrumb style="margin: 16px 0">
+						<a-breadcrumb-item>Home</a-breadcrumb-item>
+						<a-breadcrumb-item>List</a-breadcrumb-item>
+						<a-breadcrumb-item>App</a-breadcrumb-item>
+					</a-breadcrumb>
+					<a-layout-content
+						:style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+					>
+						<!-- 内容渲染部分 -->
+						<router-view></router-view>
+					</a-layout-content>
+				</a-layout>
 			</a-layout>
 		</a-layout>
   </div>
 </template>
 
 <script lang="ts">
-/* eslint-disable */
-import { computed, defineComponent, ref } from 'vue'
+import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { removeToken } from '@/utils/auth'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
   name: 'Layout',
   props: {
     msg: String
   },
+	components: {
+		UserOutlined,
+    LaptopOutlined,
+    NotificationOutlined
+	},
   setup (props) {
     // 第一个参数是 props,即父组件传来的参数
-    const collapsed = ref(false)
-    const subAppLists = [
-		{
-			name: 'vue app',
-			homePath: '/vue'
-		},
-		{
-			name: 'login',
-			homePath: '/login'
-		},
-		{
-			name: 'home',
-			homePath: '/home'
-		}
-	]
+		console.log('layout props', props)
+		const router = useRouter()
 
+		const logoutExcutor = () => {
+			removeToken()
+			router.push('/login')
+			message.success('logout success!')
+		}
     return {
-      collapsed,
-      subAppLists
+      selectedKeys2: ref<string[]>(['1']),
+      collapsed: ref<boolean>(false),
+      openKeys: ref<string[]>(['sub1']),
+			logoutExcutor
     }
   }
-});
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-#layouts {
-	width: 100%;
-	height: 100%;
-}
-	#components-layout-demo-custom-trigger {
-		position: relative;
-		height: 100%;
-		margin: 0;
-		padding: 0;
+<style lang="less" scoped>
+.layout {
+	font-size: 14px;
+	background-color: #999;
+	height: 100vh;
+	.header {
+		display: flex;
+		align-items: center;
+		overflow: auto;
+		width: 100%;
 	}
-	#components-layout-demo-custom-trigger .trigger {
-		font-size: 18px;
-		line-height: 64px;
-		padding: 0 24px;
-		cursor: pointer;
-		transition: color 0.3s;
+	.header * + * {
+		margin-left: 1em;
 	}
-	#components-layout-demo-custom-trigger .trigger:hover {
-		color: #1890ff;
+	.logout {
+		margin-left: auto;
+		margin-right: 1.7em;
 	}
-	#components-layout-demo-custom-trigger .logo {
-		height: 32px;
-		background: rgba(255, 255, 255, 0.2);
-		margin: 16px;
+	.logo {
+		float: left;
+		padding: .5em 1em;
+		margin: 1em 1.7em 1em 1em;
+		background: #fff;
+		text-align: center;
+		line-height: 1.2em;
+		font-weight: bold;
+		font-size: 1.2em;
+		text-transform: capitalize;
+		letter-spacing: -0.02em;
 	}
 
-	.ant-layout-sider {
-		overflow-y: scroll;
+	:deep .ant-layout-header {
+		overflow: hidden;
+		padding: 0;
 	}
-	.ant-layout-sider::-webkit-scrollbar {
-		display:none;
+	:deep .ant-layout {
+		min-height: 100%;
 	}
+}
 </style>

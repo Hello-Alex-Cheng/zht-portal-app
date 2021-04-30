@@ -2,10 +2,13 @@ import router from '@/router'
 import { getToken } from './utils/auth'
 
 router.beforeEach((to, from, next) => {
-  if (getToken()) {
-    next()
+  const token = getToken()
+
+  if (token) {
+    if (to.path === '/login') next('/')
+    else next()
   } else {
-    // 白名单 ?
-    next()
+    if (to.path !== '/login') next('/login')
+    else next()
   }
 })

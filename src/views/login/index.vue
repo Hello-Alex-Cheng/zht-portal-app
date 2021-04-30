@@ -20,11 +20,10 @@
         </a-form-item>
         <a-form-item>
           <a-button
-            type="primary"
             html-type="submit"
             :disabled="formState.user === '' || formState.password === ''"
           >
-            Log in
+            登 录
           </a-button>
         </a-form-item>
       </a-form>
@@ -34,11 +33,14 @@
 
 <script lang="ts">
 /* eslint-disable */
+import { defineComponent, reactive, ref } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
-import { defineComponent, reactive, UnwrapRef  } from 'vue'
 import { AxiosResponse } from 'axios'
 import { message } from 'ant-design-vue'
+import { setToken } from '@/utils/auth'
+// import router from '@/router'
+import { useRouter, useRoute } from "vue-router"
 
 import { portalLogin } from '@/api/login'
 
@@ -60,21 +62,26 @@ export default defineComponent({
     LockOutlined
   },
   setup() {
+    const router = useRouter()
+    const route = useRoute()
     // export declare type UnwrapRef<T> = T extends Ref<infer V> ? UnwrapRefSimple<V> : UnwrapRefSimple<T>;
-    const formState: UnwrapRef<FormState> = reactive({
+    const formState: FormState = reactive({
       user: 'ztadmin',
       password: 'aa123456'
     })
 
     const handleFinish = async (values: FormState) => {
-      console.log(values, formState)
+      console.log(values)
 
       const res: AxiosResponse = await portalLogin('zht_password', formState.user, formState.password)
       if ((res as ApiResponse).code === 0) {
-        message.success('登录成功!')
         console.log(res.data)
+        const { token_type, access_token } = res.data
+        setToken(`${token_type} ${access_token}`)
+        router.push('/')
+        message.success('login success!')
       } else {
-        console.log('业务代码报错', res)
+        console.log('login error', res)
       }
     }
     const handleFinishFailed = (errors: ValidateErrorEntity<FormState>) => {
@@ -107,6 +114,9 @@ export default defineComponent({
     padding: 50px 20px;
     background-color: rgba(225, 225, 225, .5);
     margin-top: -240px;
+    border-radius: 1em;
+    box-shadow: 1em .5em 4em pink;
+    -webkit-box-shadow: 1em .5em 4em pink;
   }
   .login-box > h1 {
     letter-spacing: -0.02;
