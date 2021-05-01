@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 const TokenKey = 'Zht-Admin-Token'
 
 export const getToken = () => Cookies.get(TokenKey)
-export const setToken = (token: string) => Cookies.set(TokenKey, token)
+export const setToken = (token: string) => Cookies.set(TokenKey, token, { expires: new Date(Date.now() + 12 * 60 * 60 * 1000) })
 export const removeToken = () => Cookies.remove(TokenKey)
 
 // export const setToken = (token, expiresIn, refreshToken) => {

@@ -84,6 +84,7 @@ export default defineComponent({
         console.log('login error', res)
       }
     }
+
     const handleFinishFailed = (errors: ValidateErrorEntity<FormState>) => {
       console.log(errors);
     }
@@ -102,7 +103,7 @@ export default defineComponent({
   width: 100%;
   height: 100vh;
   background-color: #ccc;
-  background-image: url('../../assets/senlin.png');
+  background-image: url('../../assets/whiteSnow.png');
   background-size: 100%;
   background-repeat: no-repeat;
   display: flex;
@@ -116,7 +117,7 @@ export default defineComponent({
     margin-top: -240px;
     border-radius: 1em;
     box-shadow: 1em .5em 4em pink;
-    -webkit-box-shadow: 1em .5em 4em pink;
+    -webkit-box-shadow: 1em .5em 4em #ccc;
   }
   .login-box > h1 {
     letter-spacing: -0.02;

@@ -3,7 +3,7 @@
     <a-layout>
 			<a-layout-header class="header">
 				<div class="logo">
-					hello_AlexCc
+					hello_AlexCc {{globalCount}}
 				</div>
 				<div class="header">
 					<a-button type="default" size="small">导航1</a-button>
@@ -78,10 +78,11 @@
 
 <script lang="ts">
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { removeToken } from '@/utils/auth'
 import { message } from 'ant-design-vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Layout',
@@ -97,6 +98,7 @@ export default defineComponent({
     // 第一个参数是 props,即父组件传来的参数
 		console.log('layout props', props)
 		const router = useRouter()
+		const store = useStore()
 
 		const logoutExcutor = () => {
 			removeToken()
@@ -107,7 +109,8 @@ export default defineComponent({
       selectedKeys2: ref<string[]>(['1']),
       collapsed: ref<boolean>(false),
       openKeys: ref<string[]>(['sub1']),
-			logoutExcutor
+			logoutExcutor,
+			globalCount: computed(() => store.state.count)
     }
   }
 })

@@ -1,30 +1,45 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 
-// @ts-ignore
 import Layout from '@/layouts/index.vue'
-// @ts-ignore
 import Home from '@/views/home/index.vue'
-// @ts-ignore
 import Login from '@/views/login/index.vue'
+
+const constantRoutes = [
+  {
+    path: '/',
+    redirect: '/home',
+    component: Layout,
+    children: [
+      {
+        path: 'home',
+        component: Home
+      }
+    ]
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/portal-error404',
+    component: () => import('@/views/error-page/404.vue')
+  },
+  {
+    path: '/portal-error401',
+    component: () => import('@/views/error-page/401.vue')
+  },
+  {
+    path: '/portal-error500',
+    component: () => import('@/views/error-page/500.vue')
+  },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/portal-error404'
+  }
+]
 
 export default createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      redirect: '/home',
-      component: Layout,
-      children: [
-        {
-          path: 'home',
-          component: Home
-        }
-      ]
-    },
-    {
-      path: '/login',
-      component: Login
-    }
-  ]
+  routes: constantRoutes
 })

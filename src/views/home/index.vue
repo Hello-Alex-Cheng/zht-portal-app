@@ -1,19 +1,30 @@
 <template>
   <div class="home">
-    <h1>Portal content</h1>
-    <h1>Portal content</h1>
-    <h1>Portal content</h1>
-    <h1>Portal content</h1>
-    <h1>Portal content</h1>
+    <h1>store value {{globalCount}}</h1>
+    <a-button @click="crementStoreCount">create count</a-button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+/* eslint-disable */
+import { defineComponent, computed } from 'vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
-  name: 'Home'
-});
+  name: 'Home',
+  setup() {
+    const store = useStore()
+
+    const crementStoreCount = () => {
+      store.commit('increment')
+    }
+
+    return {
+      globalCount: computed(() => store.state.count),
+      crementStoreCount
+    }
+  }
+})
 </script>
 
 <style>

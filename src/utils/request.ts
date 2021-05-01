@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getToken } from './auth'
 import defaultConfig from '@/configs'
 import { message } from 'ant-design-vue'
-const timeout = 60 // 秒
+const timeout = 30 // 秒
 
 
 const service = axios.create({
@@ -29,10 +29,8 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
-    /* eslint-disable */
     const { url: apiUrl } = response.config
     const { status, statusText, data } = response
-    console.log('response： ', response)
     if (status === 200) {
       if (apiUrl!.includes('auth/social/token')) {
         // 获取 user token 的接口，返回格式跟其它接口有区别，
