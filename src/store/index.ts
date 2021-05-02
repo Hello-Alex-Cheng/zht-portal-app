@@ -6,7 +6,7 @@ export interface State {
   count: number
 }
 
-// 定义注入 key
+// 定义注入 key，为了在 .vue 组件中更好的类型推断
 export const key: InjectionKey<Store<State>> = Symbol()
 
 const store = createStore<State>({

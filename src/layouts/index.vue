@@ -3,12 +3,11 @@
     <a-layout>
 			<a-layout-header class="header">
 				<div class="logo">
-					hello_AlexCc {{globalCount}}
+					hello_AlexCc1 {{$store.state.count}}
 				</div>
 				<div class="header">
-					<a-button type="default" size="small">导航1</a-button>
-					<a-button type="default" size="small">导航2</a-button>
-					<a-button type="default" size="small">导航3</a-button>
+					<a-button type="default" size="small" @click="$router.push('/')">导航portal</a-button>
+					<a-button type="default" size="small" @click="$router.push('/vue-base')">导航vue-base</a-button>
 					<a-button class="logout" type="danger" size="small" @click="logoutExcutor">退出</a-button>
 				</div>
 			</a-layout-header>
@@ -69,6 +68,8 @@
 					>
 						<!-- 内容渲染部分 -->
 						<router-view></router-view>
+
+						<div id="subAppContainer"></div>
 					</a-layout-content>
 				</a-layout>
 			</a-layout>
@@ -83,6 +84,7 @@ import { useRouter } from 'vue-router'
 import { removeToken } from '@/utils/auth'
 import { message } from 'ant-design-vue'
 import { useStore } from '@/store'
+import useSingleSpa from  '@/single-spa'
 
 export default defineComponent({
   name: 'Layout',
@@ -95,10 +97,12 @@ export default defineComponent({
     NotificationOutlined
 	},
   setup (props) {
+		console.log('这里')
     // 第一个参数是 props,即父组件传来的参数
 		console.log('layout props', props)
 		const router = useRouter()
 		const store = useStore()
+		useSingleSpa()
 
 		const logoutExcutor = () => {
 			removeToken()

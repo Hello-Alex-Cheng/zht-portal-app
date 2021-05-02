@@ -1,5 +1,5 @@
 
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 
 import Layout from '@/layouts/index.vue'
 import Home from '@/views/home/index.vue'
@@ -20,6 +20,20 @@ const constantRoutes = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path: '/vue-base',
+    component: Layout,
+    children: [
+      {
+        path: 'home',
+        component: RouterView,
+      },
+      {
+        path: 'about',
+        component: RouterView,
+      }
+    ]
   },
   {
     path: '/portal-error404',
