@@ -1,6 +1,12 @@
 import { App } from 'vue'
 import { Button, Input, Form, Layout, Breadcrumb, Menu } from 'ant-design-vue'
+import { createFromIconfontCN } from '@ant-design/icons-vue'
 import { InstallOptions } from './types'
+
+// 使用 iconfont 图标
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2299454_fvw4ct8o61.js'
+})
 
 const defaultInstallOpt = {
   zIndex: 1000,
@@ -27,6 +33,7 @@ const AntdComponent = [
 export default {
   // App 是 vue 的类型
   install: (app: App, options: InstallOptions = defaultInstallOpt ) => {
+    app.component('icon-font', IconFont)
     AntdComponent.forEach(comp => {
       app.component(comp.name, comp)
     })

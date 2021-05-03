@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
+import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue'
 import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { removeToken } from '@/utils/auth'
@@ -152,11 +152,12 @@ export default defineComponent({
 		letter-spacing: -0.02em;
 	}
 
-	:deep .ant-layout-header {
+	// 新版 /deep/ 语法
+	:deep(.ant-layout-header) {
 		overflow: hidden;
 		padding: 0;
 	}
-	:deep .ant-layout {
+	:deep(.ant-layout) {
 		min-height: 100%;
 	}
 }
