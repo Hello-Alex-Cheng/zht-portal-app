@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router'
-import store, { key } from '@/store'
+import store from '@/store'
+import { key } from '@/store/interface-types'
 
 // 重新设置 html 样式
 import 'normalize.css/normalize.css'

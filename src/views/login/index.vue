@@ -1,7 +1,10 @@
 <template>
   <div class="login">
     <div class="login-box">
-      <h1>hello_AlexCc</h1>
+      <h1>
+        hello_AlexCc
+        <icon-font type="icon-yingtao"></icon-font>
+      </h1>
       <a-form
         layout="inline"
         :model="formState"
@@ -33,26 +36,15 @@
 
 <script lang="ts">
 /* eslint-disable */
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive, inject } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
-import { AxiosResponse } from 'axios'
-import { message } from 'ant-design-vue'
-import { setToken } from '@/utils/auth'
-// import router from '@/router'
 import { useRouter, useRoute } from "vue-router"
-
-import { portalLogin } from '@/api/login'
+import store from '@/store'
 
 interface FormState {
   user: string,
   password: string
-}
-
-interface ApiResponse extends AxiosResponse {
-  code: number,
-  msg: string,
-  data: any
 }
 
 export default defineComponent({
@@ -61,28 +53,28 @@ export default defineComponent({
     UserOutlined,
     LockOutlined
   },
-  setup() {
+  mounted() {
+    // @ts-ignore
+    // this.$message.success('mounted: this.$message.success')
+  },
+  setup(props, ctx) {
+    const $message = inject('message')
     const router = useRouter()
     const route = useRoute()
+
     // export declare type UnwrapRef<T> = T extends Ref<infer V> ? UnwrapRefSimple<V> : UnwrapRefSimple<T>;
     const formState: FormState = reactive({
       user: 'ztadmin',
       password: 'aa123456'
     })
 
-    const handleFinish = async (values: FormState) => {
-      console.log(values)
 
-      const res: AxiosResponse = await portalLogin('zht_password', formState.user, formState.password)
-      if ((res as ApiResponse).code === 0) {
-        console.log(res.data)
-        const { token_type, access_token } = res.data
-        setToken(`${token_type} ${access_token}`)
-        router.push('/')
-        message.success('login success!')
-      } else {
-        console.log('login error', res)
-      }
+    const handleFinish = async (values: FormState) => {
+
+      store.dispatch('loginModule/fetchAppLists', {
+        user: formState.user,
+        psw: formState.password
+      })
     }
 
     const handleFinishFailed = (errors: ValidateErrorEntity<FormState>) => {
@@ -121,8 +113,11 @@ export default defineComponent({
   }
   .login-box > h1 {
     letter-spacing: -0.02;
-    text-transform: capitalize;
     color: #333;
+    text-transform: capitalize;
+    &:nth-child(1) {
+      color: rgb(104, 16, 16);
+    }
   }
 }
 </style>

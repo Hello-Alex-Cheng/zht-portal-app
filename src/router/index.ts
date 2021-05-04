@@ -1,25 +1,59 @@
 
 import { createRouter, createWebHistory, RouterView } from 'vue-router'
-
 import Layout from '@/layouts/index.vue'
-import Home from '@/views/home/index.vue'
-import Login from '@/views/login/index.vue'
 
 const constantRoutes = [
   {
     path: '/',
     redirect: '/home',
+  },
+  {
+    path: '/home',
     component: Layout,
     children: [
       {
-        path: 'home',
-        component: Home
+        path: '',
+        component: () => import(/* webpackChunkName: "Iconfont" */ "@/views/home/index.vue")
+      }
+    ]
+  },
+  {
+    path: '/iconfont',
+    redirect: '/iconfont/base',
+    component: Layout,
+    children: [
+      {
+        path: 'base',
+        component: () => import(/* webpackChunkName: "Iconfont" */ "@/views/iconfont/index.vue")
+      }
+    ]
+  },
+  {
+    path: '/store',
+    redirect: '/store/base',
+    component: Layout,
+    children: [
+      {
+        path: 'base',
+        component: () => import(/* webpackChunkName: "Store" */ "@/views/store/index.vue")
       }
     ]
   },
   {
     path: '/login',
-    component: Login
+    component: () => import(/* webpackChunkName: "Home" */ '@/views/login/index.vue')
+  },
+  {
+    path: '/portal-error404',
+    component: () => import(/* webpackChunkName: "portal-error404" */ '@/views/error-page/404.vue')
+  },
+  {
+    path: '/portal-error401',
+    component: () => import(/* webpackChunkName: "portal-error401" */ '@/views/error-page/401.vue')
+  },
+  {
+    path: '/portal-error500',
+    component: () => import(/* webpackChunkName: "portal-error500" */ '@/views/error-page/500.vue')
   },
   {
     path: '/vue-base',
@@ -34,18 +68,6 @@ const constantRoutes = [
         component: RouterView,
       }
     ]
-  },
-  {
-    path: '/portal-error404',
-    component: () => import('@/views/error-page/404.vue')
-  },
-  {
-    path: '/portal-error401',
-    component: () => import('@/views/error-page/401.vue')
-  },
-  {
-    path: '/portal-error500',
-    component: () => import('@/views/error-page/500.vue')
   },
   {
     path: '/:catchAll(.*)',

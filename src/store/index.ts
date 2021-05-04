@@ -1,19 +1,13 @@
-import { InjectionKey } from "vue"
-import { createStore, Store, useStore as bsaeUseStore } from "vuex"
+import { createStore, useStore as bsaeUseStore } from "vuex"
+import loginModule from './modules/login/index'
+import AllStateTypes, { key, RootState } from './interface-types'
 
-// 定义存储状态的类型
-export interface State {
-  count: number
-}
-
-// 定义注入 key，为了在 .vue 组件中更好的类型推断
-export const key: InjectionKey<Store<State>> = Symbol()
-
-const store = createStore<State>({
-  state() {
-    return {
-      count: 0
-    }
+const store = createStore<RootState>({
+  state: {
+    count: 0
+  },
+  modules: {
+    loginModule: loginModule
   },
   mutations: {
     increment(state) {
@@ -23,8 +17,8 @@ const store = createStore<State>({
 })
 
 // Simplifying useStore usage
-export function useStore() {
-  return bsaeUseStore(key)
+export function useStore<T = AllStateTypes>() {
+  return bsaeUseStore<T>(key)
 }
 
 export default store

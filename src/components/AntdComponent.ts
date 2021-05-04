@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { Button, Input, Form, Layout, Breadcrumb, Menu } from 'ant-design-vue'
+import { Button, Input, Form, Layout, Breadcrumb, Menu, message } from 'ant-design-vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
 import { InstallOptions } from './types'
 
@@ -30,10 +30,19 @@ const AntdComponent = [
   Menu.ItemGroup
 ]
 
+const installOtherComponents = (app: App): void => {
+  app.component('icon-font', IconFont)
+
+  // 同时支持 composition api 和 options api 方式
+  app.provide('message', message)
+  app.config.globalProperties.$message = message
+}
+
 export default {
   // App 是 vue 的类型
-  install: (app: App, options: InstallOptions = defaultInstallOpt ) => {
-    app.component('icon-font', IconFont)
+  install: (app: App, options: InstallOptions = defaultInstallOpt ): void => {
+    installOtherComponents(app)
+
     AntdComponent.forEach(comp => {
       app.component(comp.name, comp)
     })

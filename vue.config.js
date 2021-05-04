@@ -13,14 +13,6 @@ module.exports = {
     }
   },
   configureWebpack: config => {
-    const myConfig = Object.create(null)
-    myConfig.resolve = {
-      extensions: ['.js', '.ts', '.vue', '.json'],
-      alias: {
-        // '@views': path.resolve(__dirname, './src/views')
-      }
-    }
-
-    return myConfig
+    // return config
   }
 }

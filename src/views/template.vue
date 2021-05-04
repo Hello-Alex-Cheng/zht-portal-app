@@ -1,6 +1,5 @@
 <template>
-  <div class="test">
-    test123
+  <div class="template">
   </div>
 </template>
 
@@ -8,9 +7,11 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'Test'
-});
+  name: 'Template',
+  components: {},
+  setup() {}
+})
 </script>
 
-<style>
+<style scoped lang="less">
 </style>

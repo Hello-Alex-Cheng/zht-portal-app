@@ -3,7 +3,7 @@
     <a-layout>
 			<a-layout-header class="header">
 				<div class="logo">
-					hello_AlexCc1 {{$store.state.count}}
+					<icon-font type="icon-bow" style="font-size: 2em"></icon-font>
 				</div>
 				<div class="header">
 					<a-button type="default" size="small" @click="$router.push('/')">导航portal</a-button>
@@ -15,46 +15,34 @@
 				<a-layout-sider width="200" style="background: #fff">
 					<a-menu
 						mode="inline"
-						v-model:selectedKeys="selectedKeys2"
+						v-model:selectedKeys="activeMenuKey"
 						v-model:openKeys="openKeys"
 						:style="{ height: '100%', borderRight: 0 }"
 					>
-						<a-sub-menu key="sub1">
-							<template #title>
-								<span>
-									<user-outlined />
-									subnav 1
-								</span>
-							</template>
-							<a-menu-item key="1">option1</a-menu-item>
-							<a-menu-item key="2">option2</a-menu-item>
-							<a-menu-item key="3">option3</a-menu-item>
-							<a-menu-item key="4">option4</a-menu-item>
-						</a-sub-menu>
-						<a-sub-menu key="sub2">
-							<template #title>
-								<span>
-									<laptop-outlined />
-									subnav 2
-								</span>
-							</template>
-							<a-menu-item key="5">option5</a-menu-item>
-							<a-menu-item key="6">option6</a-menu-item>
-							<a-menu-item key="7">option7</a-menu-item>
-							<a-menu-item key="8">option8</a-menu-item>
-						</a-sub-menu>
-						<a-sub-menu key="sub3">
-							<template #title>
-								<span>
-									<notification-outlined />
-									subnav 3
-								</span>
-							</template>
-							<a-menu-item key="9">option9</a-menu-item>
-							<a-menu-item key="10">option10</a-menu-item>
-							<a-menu-item key="11">option11</a-menu-item>
-							<a-menu-item key="12">option12</a-menu-item>
-						</a-sub-menu>
+						<template v-for="menu in application.appMenus" :key="menu.id">
+							<!-- 二级菜单 -->
+							<a-sub-menu v-if="menu.childMenus && menu.childMenus.length" :key="menu.id">
+								<template #title>
+									<span>
+										<user-outlined />
+										{{menu.menuName}}
+									</span>
+								</template>
+								<a-menu-item v-for="childMenu in menu.childMenus" :key="childMenu.id">
+									<router-link :to="childMenu.path">{{childMenu.menuName}}</router-link>
+								</a-menu-item>
+							</a-sub-menu>
+
+							<!-- 一级菜单 -->
+							<a-menu-item v-else :key="menu.id">
+								<router-link :to="menu.path">
+										<span>
+											<user-outlined />
+											{{menu.menuName}}
+										</span>
+								</router-link>
+							</a-menu-item>
+						</template>
 					</a-menu>
 				</a-layout-sider>
 				<a-layout style="padding: 0 24px 24px">
@@ -78,8 +66,9 @@
 </template>
 
 <script lang="ts">
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue'
-import { computed, defineComponent, ref } from 'vue'
+/* eslint-disable */
+import { UserOutlined, LaptopOutlined } from '@ant-design/icons-vue'
+import { computed, defineComponent, onMounted, ref, toRefs, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { removeToken } from '@/utils/auth'
 import { message } from 'ant-design-vue'
@@ -93,28 +82,37 @@ export default defineComponent({
   },
 	components: {
 		UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined
+    LaptopOutlined
 	},
-  setup (props) {
-		console.log('这里')
-    // 第一个参数是 props,即父组件传来的参数
-		console.log('layout props', props)
+  setup () {
 		const router = useRouter()
 		const store = useStore()
 		useSingleSpa()
+
+		onMounted(() => {})
 
 		const logoutExcutor = () => {
 			removeToken()
 			router.push('/login')
 			message.success('logout success!')
 		}
+
+		const activeMenuKey = ref<string[]>([])
+
+		watch(() => activeMenuKey.value, (old, now) => {
+			console.log(old.values().next(), now.values(), Object.keys(activeMenuKey.value))
+		})
+
+		console.log('数据', store.state.loginModule.applitions)
+
     return {
-      selectedKeys2: ref<string[]>(['1']),
+      activeMenuKey: activeMenuKey,
       collapsed: ref<boolean>(false),
-      openKeys: ref<string[]>(['sub1']),
+      openKeys: ref<string[]>([]),
 			logoutExcutor,
-			globalCount: computed(() => store.state.count)
+			globalCount: computed(() => store.state.count),
+			publicPath: process.env.BASE_URL,
+			application: store.state.loginModule.applitions
     }
   }
 })
@@ -131,6 +129,7 @@ export default defineComponent({
 		align-items: center;
 		overflow: auto;
 		width: 100%;
+		padding-left: 5.2em;
 	}
 	.header * + * {
 		margin-left: 1em;
@@ -143,7 +142,6 @@ export default defineComponent({
 		float: left;
 		padding: .5em 1em;
 		margin: 1em 1.7em 1em 1em;
-		background: #fff;
 		text-align: center;
 		line-height: 1.2em;
 		font-weight: bold;

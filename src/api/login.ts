@@ -18,3 +18,19 @@ export const portalLogin = (type: string, username: string, password: string) =>
     params
   })
 }
+
+// 获取用户详情
+export const getUserMenuInfo = () => {
+  return request({
+    method: 'GET',
+    url: '/zhtSysUser/_loady_user_info'
+  })
+}
+
+// 获取用户详情
+export const getUserInfo = () => {
+  return request({
+    method: 'GET',
+    url: '/zhtSysUser/_loady_user'
+  })
+}
