@@ -1,13 +1,19 @@
 import { createStore, useStore as bsaeUseStore } from "vuex"
+import getters from './getters'
 import loginModule from './modules/login/index'
+import userModule from './modules/user/index'
+import permissionsModule from './modules/permissions/index'
 import AllStateTypes, { key, RootState } from './interface-types'
 
 const store = createStore<RootState>({
   state: {
     count: 0
   },
+  getters,
   modules: {
-    loginModule: loginModule
+    loginModule,
+    userModule,
+    permissionsModule
   },
   mutations: {
     increment(state) {

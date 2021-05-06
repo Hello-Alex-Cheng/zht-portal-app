@@ -5,7 +5,7 @@
 
     <div class="app">
       <ul>
-        <li v-for="app in appList" :key="app.id">{{app.name}}</li>
+        <li v-for="app in appList" :key="app.id">{{app.name || app.appInstructions}}</li>
       </ul>
     </div>
   </div>
@@ -47,15 +47,13 @@ export default defineComponent({
         }
       ]
 
-      store.commit('loginModule/Update_Applications', appList)
+      store.commit('loginModule/UPDATE_APPLICATION', appList)
     }
-
-    console.log('???', store.state.loginModule.applitions)
 
     return {
       globalCount: computed(() => store.state.count),
       crementStoreCount,
-      appList: computed(() => store.state.loginModule.applitions)
+      appList: computed(() => store.state.loginModule.applications)
     }
   }
 })

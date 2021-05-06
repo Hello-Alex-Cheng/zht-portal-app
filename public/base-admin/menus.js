@@ -2,6 +2,7 @@ export default [
   {
     appId: 1,
     appInstructions: '基础模块',
+    path: '/',
     appPrefix: '/zht-base-admin',
     homePath: '/subapp/zht-base-admin/index.html',
     appIcon: '',
@@ -61,6 +62,7 @@ export default [
   {
     appId: 2,
     appInstructions: '基础Vue模块',
+    path: '/vue-base',
     appPrefix: '/vue-base',
     homePath: '/subapp/vue-base/index.html',
     appIcon: '',

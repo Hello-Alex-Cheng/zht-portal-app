@@ -71,7 +71,7 @@ export default defineComponent({
 
     const handleFinish = async (values: FormState) => {
 
-      store.dispatch('loginModule/fetchAppLists', {
+      store.dispatch('loginModule/login', {
         user: formState.user,
         psw: formState.password
       })

@@ -1,47 +1,47 @@
 
-import { createRouter, createWebHistory, RouterView } from 'vue-router'
-import Layout from '@/layouts/index.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const constantRoutes = [
   {
     path: '/',
     redirect: '/home',
   },
-  {
-    path: '/home',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import(/* webpackChunkName: "Iconfont" */ "@/views/home/index.vue")
-      }
-    ]
-  },
-  {
-    path: '/iconfont',
-    redirect: '/iconfont/base',
-    component: Layout,
-    children: [
-      {
-        path: 'base',
-        component: () => import(/* webpackChunkName: "Iconfont" */ "@/views/iconfont/index.vue")
-      }
-    ]
-  },
-  {
-    path: '/store',
-    redirect: '/store/base',
-    component: Layout,
-    children: [
-      {
-        path: 'base',
-        component: () => import(/* webpackChunkName: "Store" */ "@/views/store/index.vue")
-      }
-    ]
-  },
+  // {
+  //   path: '/home',
+  //   name: 'Home',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: () => import(/* webpackChunkName: "Home" */ "@/views/home/index.vue")
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/iconfont',
+  //   redirect: '/iconfont/base',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'base',
+  //       component: () => import(/* webpackChunkName: "Iconfont" */ "@/views/iconfont/index.vue")
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/store',
+  //   redirect: '/store/base',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'base',
+  //       component: () => import(/* webpackChunkName: "Store" */ "@/views/store/index.vue")
+  //     }
+  //   ]
+  // },
   {
     path: '/login',
-    component: () => import(/* webpackChunkName: "Home" */ '@/views/login/index.vue')
+    component: () => import(/* webpackChunkName: "Login" */ '@/views/login/index.vue')
   },
   {
     path: '/portal-error404',
@@ -55,20 +55,20 @@ const constantRoutes = [
     path: '/portal-error500',
     component: () => import(/* webpackChunkName: "portal-error500" */ '@/views/error-page/500.vue')
   },
-  {
-    path: '/vue-base',
-    component: Layout,
-    children: [
-      {
-        path: 'home',
-        component: RouterView,
-      },
-      {
-        path: 'about',
-        component: RouterView,
-      }
-    ]
-  },
+  // {
+  //   path: '/vue-base',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'home',
+  //       component: RouterView,
+  //     },
+  //     {
+  //       path: 'about',
+  //       component: RouterView,
+  //     }
+  //   ]
+  // },
   {
     path: '/:catchAll(.*)',
     redirect: '/portal-error404'

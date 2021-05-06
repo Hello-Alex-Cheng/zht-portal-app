@@ -8,6 +8,16 @@
 				<div class="header">
 					<a-button type="default" size="small" @click="$router.push('/')">导航portal</a-button>
 					<a-button type="default" size="small" @click="$router.push('/vue-base')">导航vue-base</a-button>
+					<a-select
+						ref="select"
+						v-model:value="appKey"
+						style="width: 120px"
+						@change="handleChange"
+					>
+						<a-select-option v-for="app in applications" :key="app.appPrefix">
+							{{app.appInstructions}}
+						</a-select-option>
+					</a-select>
 					<a-button class="logout" type="danger" size="small" @click="logoutExcutor">退出</a-button>
 				</div>
 			</a-layout-header>
@@ -16,11 +26,9 @@
 					<a-menu
 						mode="inline"
 						v-model:selectedKeys="activeMenuKey"
-						v-model:openKeys="openKeys"
 						:style="{ height: '100%', borderRight: 0 }"
 					>
-						<template v-for="menu in application.appMenus" :key="menu.id">
-							<!-- 二级菜单 -->
+						<template v-for="menu in currentApp.appMenus">
 							<a-sub-menu v-if="menu.childMenus && menu.childMenus.length" :key="menu.id">
 								<template #title>
 									<span>
@@ -33,13 +41,12 @@
 								</a-menu-item>
 							</a-sub-menu>
 
-							<!-- 一级菜单 -->
 							<a-menu-item v-else :key="menu.id">
 								<router-link :to="menu.path">
-										<span>
-											<user-outlined />
-											{{menu.menuName}}
-										</span>
+									<span>
+										<user-outlined />
+										{{menu.menuName}}
+									</span>
 								</router-link>
 							</a-menu-item>
 						</template>
@@ -57,6 +64,7 @@
 						<!-- 内容渲染部分 -->
 						<router-view></router-view>
 
+						<!-- 子应用渲染区域 -->
 						<div id="subAppContainer"></div>
 					</a-layout-content>
 				</a-layout>
@@ -67,13 +75,18 @@
 
 <script lang="ts">
 /* eslint-disable */
-import { UserOutlined, LaptopOutlined } from '@ant-design/icons-vue'
-import { computed, defineComponent, onMounted, ref, toRefs, watch } from 'vue'
+import { UserOutlined, LaptopOutlined, NotificationOutlined  } from '@ant-design/icons-vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import { Select } from "ant-design-vue"
 import { useRouter } from 'vue-router'
+import router from '@/router'
 import { removeToken } from '@/utils/auth'
-import { message } from 'ant-design-vue'
-import { useStore } from '@/store'
+import store, { useStore } from '@/store'
 import useSingleSpa from  '@/single-spa'
+import { ApplicationType } from '@/store/modules/login/interface-types'
+
+// @ts-ignore
+import applications from "/public/base-admin/menus"
 
 export default defineComponent({
   name: 'Layout',
@@ -82,37 +95,59 @@ export default defineComponent({
   },
 	components: {
 		UserOutlined,
-    LaptopOutlined
+    LaptopOutlined,
+		NotificationOutlined,
+		'a-select-option': Select.Option
+	},
+	mounted() {
+		console.log('routes ', router.getRoutes())
 	},
   setup () {
 		const router = useRouter()
 		const store = useStore()
+		const activeMenuKey = ref<string[]>(['/home'])
+		const appKey = ref('/zht-base-admin')
+
 		useSingleSpa()
 
-		onMounted(() => {})
+		watch(activeMenuKey, () => {
+			console.log('?', store.state.userModule.currentApp)
+		})
+
+		watch(() => store.state.userModule.currentApp, (app, old) => {
+			console.log('app.path', app.path)
+			console.log('app', window.location)
+
+			appKey.value = app.path
+			// window.location.href = window.location.origin + app.path
+			// router.push(app.path)
+			router.push({
+				path: app.path
+			})
+			// window.history.pushState(null, app.appInstructions, app.path)
+		})
+
+    const handleChange = (value: string) => {
+			const selected = applications.find((app: ApplicationType) => app.appPrefix === value)
+			store.commit('userModule/SET_CURRENT_APP', selected)
+			// window.history.pushState(null, 'hello world', value)
+		}
+
+		handleChange('/zht-base-admin')
 
 		const logoutExcutor = () => {
 			removeToken()
 			router.push('/login')
-			message.success('logout success!')
 		}
 
-		const activeMenuKey = ref<string[]>([])
-
-		watch(() => activeMenuKey.value, (old, now) => {
-			console.log(old.values().next(), now.values(), Object.keys(activeMenuKey.value))
-		})
-
-		console.log('数据', store.state.loginModule.applitions)
-
     return {
+			applications: store.state.userModule.applications,
+			currentApp: computed(() => store.state.userModule.currentApp),
       activeMenuKey: activeMenuKey,
       collapsed: ref<boolean>(false),
-      openKeys: ref<string[]>([]),
 			logoutExcutor,
-			globalCount: computed(() => store.state.count),
-			publicPath: process.env.BASE_URL,
-			application: store.state.loginModule.applitions
+			appKey: appKey,
+			handleChange
     }
   }
 })

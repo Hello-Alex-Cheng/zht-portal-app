@@ -1,5 +1,13 @@
 import { App } from 'vue'
-import { Button, Input, Form, Layout, Breadcrumb, Menu, message } from 'ant-design-vue'
+import { Button,
+  Input,
+  Form,
+  Layout,
+  Breadcrumb,
+  Menu,
+  message,
+  Select
+} from 'ant-design-vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
 import { InstallOptions } from './types'
 
@@ -27,7 +35,8 @@ const AntdComponent = [
   Menu,
   Menu.Item,
   Menu.SubMenu,
-  Menu.ItemGroup
+  Menu.ItemGroup,
+  Select
 ]
 
 const installOtherComponents = (app: App): void => {

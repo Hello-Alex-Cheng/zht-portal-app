@@ -1,4 +1,5 @@
 
+
 export interface ApplicationType {
   id: number
   appId: number
@@ -8,7 +9,11 @@ export interface ApplicationType {
   [propName:string]: any
 }
 
-export default interface LoginModuleTypes {
-  applications: Array<ApplicationType>,
+export default interface UserModuleTypes {
+  name: string
+  roles: Array<string>
   currentApp: ApplicationType
+  applications: Array<ApplicationType>
+  avatar?: string
+  introduction?: string
 }
