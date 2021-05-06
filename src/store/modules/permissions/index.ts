@@ -43,7 +43,7 @@ const handleParseChildRoutes = (childs: ChildRouteType, prePath: string): ChildR
 const actions = {
   generateRoutes({ commit }, roles) {
     // 可以根据 roles 来选择性返回 route
-    console.log('roles', roles)
+    console.log('permissions roles', roles)
     return new Promise<void>((resolve, reject) => {
       asyncRoutesMap.forEach((route: RouteType) => {
         router.addRoute({

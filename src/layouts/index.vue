@@ -6,8 +6,6 @@
 					<icon-font type="icon-bow" style="font-size: 2em"></icon-font>
 				</div>
 				<div class="header">
-					<a-button type="default" size="small" @click="$router.push('/')">导航portal</a-button>
-					<a-button type="default" size="small" @click="$router.push('/vue-base')">导航vue-base</a-button>
 					<a-select
 						ref="select"
 						v-model:value="appKey"
@@ -99,41 +97,36 @@ export default defineComponent({
 		NotificationOutlined,
 		'a-select-option': Select.Option
 	},
-	mounted() {
-		console.log('routes ', router.getRoutes())
-	},
   setup () {
 		const router = useRouter()
 		const store = useStore()
-		const activeMenuKey = ref<string[]>(['/home'])
-		const appKey = ref('/zht-base-admin')
+		const activeMenuKey = ref<number[]>([1])
+		const appKey = ref<string>('/zht-base-admin')
 
 		useSingleSpa()
 
-		watch(activeMenuKey, () => {
-			console.log('?', store.state.userModule.currentApp)
+		watch(activeMenuKey, (key, old) => {
+			console.log('key ', key)
+			console.log('old ', old)
 		})
 
 		watch(() => store.state.userModule.currentApp, (app, old) => {
-			console.log('app.path', app.path)
-			console.log('app', window.location)
-
-			appKey.value = app.path
-			// window.location.href = window.location.origin + app.path
-			// router.push(app.path)
 			router.push({
 				path: app.path
 			})
-			// window.history.pushState(null, app.appInstructions, app.path)
 		})
 
     const handleChange = (value: string) => {
 			const selected = applications.find((app: ApplicationType) => app.appPrefix === value)
+
+			activeMenuKey.value = [1]
+
+			appKey.value = selected.appPrefix
+
 			store.commit('userModule/SET_CURRENT_APP', selected)
-			// window.history.pushState(null, 'hello world', value)
 		}
 
-		handleChange('/zht-base-admin')
+		// handleChange('/zht-base-admin')
 
 		const logoutExcutor = () => {
 			removeToken()

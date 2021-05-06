@@ -69,7 +69,7 @@ export default [
     appMenus: [
       {
         id: 1,
-        appId: 1,
+        appId: 2,
         path: '/vue-base/home',
         menuName: '首页',
         menuIcon: '',
@@ -78,8 +78,8 @@ export default [
         whitelist: 0
       },
       {
-        id: 1,
-        appId: 1,
+        id: 2,
+        appId: 2,
         path: '/vue-base/about',
         menuName: '关于',
         menuIcon: '',

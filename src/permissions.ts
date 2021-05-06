@@ -30,7 +30,7 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done()
     } else {
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      console.log('hasRoles ' ,hasRoles)
+
       if (hasRoles) {
         next()
       } else {
@@ -38,13 +38,12 @@ router.beforeEach(async (to, from, next) => {
 
           await store.dispatch('userModule/getApplicaionts')
 
-          const { roles } = await store.dispatch('userModule/getInfo')
+          const roles = await store.dispatch('userModule/getInfo')
 
           const accessRoutes = await store.dispatch('permissionsModule/generateRoutes', roles)
+          // console.log('accessRoutes', accessRoutes)
 
-          console.log('accessRoutes', accessRoutes)
-
-          next({ ...to, replace: true })
+          next({ path: '/', replace: true })
         } catch (error) {
           next(`/login?redirect=${to.path}`)
           NProgress.done()
