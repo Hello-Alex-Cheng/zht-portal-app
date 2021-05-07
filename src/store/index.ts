@@ -1,4 +1,4 @@
-import { createStore, useStore as bsaeUseStore } from "vuex"
+import { createStore, useStore as bsaeUseStore, GetterTree } from "vuex"
 import getters from './getters'
 import loginModule from './modules/login/index'
 import userModule from './modules/user/index'
@@ -9,6 +9,7 @@ const store = createStore<RootState>({
   state: {
     count: 0
   },
+  // @ts-ignore
   getters,
   modules: {
     loginModule,

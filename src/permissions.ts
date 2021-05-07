@@ -4,6 +4,9 @@ import NProgress from "nprogress"
 import { getToken } from './utils/auth'
 import store from "@/store"
 
+import { ActionTypes as userAction } from "@/store/modules/user/index"
+import { ActionTypes as permissionAction } from "@/store/modules/permissions/index"
+
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 type ChildRouteType= Array<RouteType>
@@ -36,11 +39,11 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
 
-          await store.dispatch('userModule/getApplicaionts')
+          await store.dispatch(`userModule/${userAction.GetApplictions}`)
 
-          const roles = await store.dispatch('userModule/getInfo')
+          const roles = await store.dispatch(`userModule/${userAction.GetInfo}`)
 
-          const accessRoutes = await store.dispatch('permissionsModule/generateRoutes', roles)
+          const accessRoutes = await store.dispatch(`permissionsModule/${permissionAction.GenerateRoutes}`, roles)
           // console.log('accessRoutes', accessRoutes)
 
           next({ path: '/', replace: true })

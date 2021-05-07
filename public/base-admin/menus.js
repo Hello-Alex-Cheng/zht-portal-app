@@ -12,7 +12,7 @@ export default [
         appId: 1,
         path: '/home',
         menuName: '首页',
-        menuIcon: '',
+        menuIcon: 'icon-mugua',
         childMenus: [],
         hidden: true,
         whitelist: 0
@@ -22,14 +22,14 @@ export default [
         appId: 1,
         path: '/iconfont',
         menuName: 'iconfont',
-        menuIcon: '',
+        menuIcon: 'icon-caomei',
         childMenus: [
           {
             id: 4,
             appId: 1,
             path: '/iconfont/base',
             menuName: '基础使用',
-            menuIcon: '',
+            menuIcon: 'icon-xigua',
             hidden: true,
             whitelist: 0
           }
@@ -42,14 +42,14 @@ export default [
         appId: 1,
         path: '/store',
         menuName: 'store',
-        menuIcon: '',
+        menuIcon: 'icon-yingtao',
         childMenus: [
           {
             id: 5,
             appId: 1,
             path: '/store/base',
             menuName: '基础使用',
-            menuIcon: '',
+            menuIcon: 'icon-douya',
             hidden: true,
             whitelist: 0
           }
@@ -72,7 +72,7 @@ export default [
         appId: 2,
         path: '/vue-base/home',
         menuName: '首页',
-        menuIcon: '',
+        menuIcon: 'icon-xianggu',
         childMenus: [],
         hidden: true,
         whitelist: 0
@@ -82,7 +82,7 @@ export default [
         appId: 2,
         path: '/vue-base/about',
         menuName: '关于',
-        menuIcon: '',
+        menuIcon: 'icon-angel',
         childMenus: [],
         hidden: true,
         whitelist: 0

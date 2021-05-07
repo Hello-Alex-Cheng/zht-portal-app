@@ -30,19 +30,22 @@
 							<a-sub-menu v-if="menu.childMenus && menu.childMenus.length" :key="menu.id">
 								<template #title>
 									<span>
-										<user-outlined />
+										<icon-font :type="menu.menuIcon"></icon-font>
 										{{menu.menuName}}
 									</span>
 								</template>
 								<a-menu-item v-for="childMenu in menu.childMenus" :key="childMenu.id">
-									<router-link :to="childMenu.path">{{childMenu.menuName}}</router-link>
+									<router-link :to="childMenu.path">
+										<icon-font :type="childMenu.menuIcon"></icon-font>
+										{{childMenu.menuName}}
+									</router-link>
 								</a-menu-item>
 							</a-sub-menu>
 
 							<a-menu-item v-else :key="menu.id">
 								<router-link :to="menu.path">
 									<span>
-										<user-outlined />
+										<icon-font :type="menu.menuIcon"></icon-font>
 										{{menu.menuName}}
 									</span>
 								</router-link>
@@ -73,15 +76,14 @@
 
 <script lang="ts">
 /* eslint-disable */
-import { UserOutlined, LaptopOutlined, NotificationOutlined  } from '@ant-design/icons-vue'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { Select } from "ant-design-vue"
 import { useRouter } from 'vue-router'
-import router from '@/router'
 import { removeToken } from '@/utils/auth'
-import store, { useStore } from '@/store'
+import { useStore } from '@/store'
 import useSingleSpa from  '@/single-spa'
-import { ApplicationType } from '@/store/modules/login/interface-types'
+import { ApplicationType } from '@/store/modules/user/interface-types'
+import { MutationTypes } from "@/store/modules/user/index"
 
 // @ts-ignore
 import applications from "/public/base-admin/menus"
@@ -92,9 +94,6 @@ export default defineComponent({
     msg: String
   },
 	components: {
-		UserOutlined,
-    LaptopOutlined,
-		NotificationOutlined,
 		'a-select-option': Select.Option
 	},
   setup () {
@@ -105,14 +104,9 @@ export default defineComponent({
 
 		useSingleSpa()
 
-		watch(activeMenuKey, (key, old) => {
-			console.log('key ', key)
-			console.log('old ', old)
-		})
-
 		watch(() => store.state.userModule.currentApp, (app, old) => {
 			router.push({
-				path: app.path
+				path: (app.path as string)
 			})
 		})
 
@@ -123,7 +117,7 @@ export default defineComponent({
 
 			appKey.value = selected.appPrefix
 
-			store.commit('userModule/SET_CURRENT_APP', selected)
+			store.commit(`userModule/${MutationTypes.SetCurrentApp}`, selected)
 		}
 
 		// handleChange('/zht-base-admin')

@@ -1,15 +1,13 @@
-
-
 export interface ApplicationType {
-  id: number
-  appId: number
-  path: string
-  menuName: string
-  childMenu: Array<ApplicationType>
+  id?: number
+  appId?: number
+  path?: string
+  menuName?: string
+  childMenu?: Array<ApplicationType>
   [propName:string]: any
 }
 
-export default interface UserModuleTypes {
+export default interface UserModuleStateType {
   name: string
   roles: Array<string>
   currentApp: ApplicationType

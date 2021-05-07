@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import { Module } from "vuex"
+import { ActionContext, ActionTree, Module, MutationTree } from "vuex"
 import { RootState } from '../../interface-types'
 import LoginModuleTypes from './interface-types'
 import { message } from "ant-design-vue"
@@ -15,33 +13,65 @@ interface ApiResponse extends AxiosResponse {
   data: any
 }
 
+export enum MutationTypes {
+  UpdateToken = "UPDATE_TOKEN",
+  UpdateUserName = "UPDATE_USER_NAME"
+}
+
+export type Mutations<T> = {
+  [MutationTypes.UpdateToken](state: T, token: string): void
+  [MutationTypes.UpdateUserName](state: T, name: string): void
+}
+
+const mutations: MutationTree<LoginModuleTypes> & Mutations<LoginModuleTypes> = {
+  [MutationTypes.UpdateToken](state: LoginModuleTypes, payload: string) {
+    state.token = payload
+  },
+  [MutationTypes.UpdateUserName](state: LoginModuleTypes, name: string) {
+    state.username = name
+  }
+}
+
+export enum ActionTypes {
+  Login = "LOGIN"
+}
+
+type ActionArgs = Omit<ActionContext<LoginModuleTypes, LoginModuleTypes>, 'commit'> & {
+  commit<k extends keyof Mutations<LoginModuleTypes>>(
+    key: k,
+    payload: Parameters<Mutations<LoginModuleTypes>[k]>[1]
+  ): ReturnType<Mutations<LoginModuleTypes>[k]>
+}
+
+export type Actions = {
+  [ActionTypes.Login](context: ActionArgs, payload: { user: string, psw: string }): void
+}
+
+const actions: ActionTree<LoginModuleTypes, LoginModuleTypes> & Actions = {
+  async [ActionTypes.Login]({ commit }, { user, psw}) {
+    const res: AxiosResponse = await portalLogin('zht_password', user, psw)
+    if ((res as ApiResponse).code === 0) {
+      const { access_token } = res.data
+      commit(MutationTypes.UpdateToken, access_token)
+      setToken(`Bearer ${access_token}`)
+      message.success('login success')
+      router.push('/')
+    } else {
+      // @ts-ignore
+      message.error(res.errmsg)
+    }
+  }
+}
+
 const LoginModule: Module<LoginModuleTypes, RootState> = {
   namespaced: true,
   state: {
-    applications: [],
-    currentApp: {}
+    token: '',
+    username: ''
   },
-  mutations: {
-    UPDATE_APPLICATION(state: LoginModuleTypes, payload: Array<any>) {
-      state.applications = payload
-    },
-    UPDATE_CURRENT_APP(state, app) {
-      state.currentApp = app
-    }
-  },
-  actions: {
-    async login(state, { user, psw}) {
-      const res: AxiosResponse = await portalLogin('zht_password', user, psw)
-      if ((res as ApiResponse).code === 0) {
-        const { access_token } = res.data
-        setToken(`Bearer ${access_token}`)
-        message.success('login success')
-        router.push('/')
-      } else {
-        message.error(res.errmsg)
-      }
-    }
-  }
+  mutations,
+  // @ts-ignore
+  actions
 }
 
 export default LoginModule

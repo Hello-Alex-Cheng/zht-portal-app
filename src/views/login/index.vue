@@ -41,6 +41,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
 import { useRouter, useRoute } from "vue-router"
 import store from '@/store'
+import { ActionTypes } from "@/store/modules/login/index";
 
 interface FormState {
   user: string,
@@ -52,10 +53,6 @@ export default defineComponent({
   components: {
     UserOutlined,
     LockOutlined
-  },
-  mounted() {
-    // @ts-ignore
-    // this.$message.success('mounted: this.$message.success')
   },
   setup(props, ctx) {
     const $message = inject('message')
@@ -71,7 +68,7 @@ export default defineComponent({
 
     const handleFinish = async (values: FormState) => {
 
-      store.dispatch('loginModule/login', {
+      store.dispatch(`loginModule/${ActionTypes.Login}`, {
         user: formState.user,
         psw: formState.password
       })

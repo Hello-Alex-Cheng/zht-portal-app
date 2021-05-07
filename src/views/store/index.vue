@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useStore } from '@/store'
+import { MutationTypes } from "@/store/modules/user/index";
 
 export default defineComponent({
   name: 'Store',
@@ -47,13 +48,13 @@ export default defineComponent({
         }
       ]
 
-      store.commit('loginModule/UPDATE_APPLICATION', appList)
+      store.commit(`userModule/${MutationTypes.SetApplications}`, appList)
     }
 
     return {
       globalCount: computed(() => store.state.count),
       crementStoreCount,
-      appList: computed(() => store.state.loginModule.applications)
+      appList: computed(() => store.state.userModule.applications)
     }
   }
 })
