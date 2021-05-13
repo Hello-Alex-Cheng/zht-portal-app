@@ -10,6 +10,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
+import { getToken } from '@/utils/auth'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
   name: 'Error',
@@ -19,7 +21,12 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const goBack = () => {
-      router.push('/')
+      if (!getToken()) {
+        message.warn('用户未登录，请登录!')
+        router.push('/login')
+      } else {
+        router.push('/')
+      }
     }
 
     return {

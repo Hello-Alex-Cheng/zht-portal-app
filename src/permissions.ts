@@ -55,12 +55,12 @@ router.beforeEach(async (to, from, next) => {
   } else {
     if (to.path === '/login') {
       next()
-      NProgress.done()
     } else if (isWhite > -1) {
       next()
     } else {
       next('/login')
     }
+    NProgress.done()
   }
 })
 
