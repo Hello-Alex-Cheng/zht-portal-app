@@ -7,9 +7,9 @@ import UserModuleStateType, { ApplicationType } from './interface-types'
 import applications from "/public/base-admin/menus"
 
 export enum MutationTypes {
-  SetRoles = "SET_ROLES",
-  SetApplications = "SET_APPLICATIONS",
-  SetCurrentApp = "SET_CURRENT_APP"
+  SET_ROLES = "SET_ROLES",
+  SET_APPLICATIONS = "SET_APPLICATIONS",
+  SET_CURRENT_APP = "SET_CURRENT_APP"
 }
 
 export enum ActionTypes {
@@ -17,25 +17,25 @@ export enum ActionTypes {
   GetApplictions = "GET_APPLICATONS"
 }
 
-type ActionArgs = Omit<ActionContext<UserModuleStateType, UserModuleStateType>, 'commit'> & {
-  commit<k extends keyof Mutations<UserModuleStateType>>(
+type ActionArgs = Omit<ActionContext<UserModuleStateType, RootState>, 'commit'> & {
+  commit<k extends keyof Mutations>(
     key: k,
-    payload: Parameters<Mutations<UserModuleStateType>[k]>[1]
-  ): ReturnType<Mutations<UserModuleStateType>[k]>
+    payload: Parameters<Mutations[k]>[1]
+  ): ReturnType<Mutations[k]>
 }
 
-export type Mutations<T> = {
-  [MutationTypes.SetRoles](state: T, roles: Array<string>): void
-  [MutationTypes.SetApplications](state: T, apps: Array<ApplicationType>): void
-  [MutationTypes.SetCurrentApp](state: T, app: ApplicationType): void
+export type Mutations<T = UserModuleStateType> = {
+  [MutationTypes.SET_ROLES](state: T, roles: Array<string>): void
+  [MutationTypes.SET_APPLICATIONS](state: T, apps: Array<ApplicationType>): void
+  [MutationTypes.SET_CURRENT_APP](state: T, app: ApplicationType): void
 }
 
 export type Actions = {
-  [ActionTypes.GetInfo](context: ActionArgs): void
-  [ActionTypes.GetApplictions](context: ActionArgs): void
+  [ActionTypes.GetInfo]({ commit }: ActionArgs): void
+  [ActionTypes.GetApplictions]({ commit }: ActionArgs): void
 }
 
-const state = {
+const state: UserModuleStateType = {
   name: '',
   avatar: '',
   introduction: '',
@@ -44,32 +44,31 @@ const state = {
   currentApp: {}
 }
 
-const mutations: MutationTree<UserModuleStateType> & Mutations<UserModuleStateType> = {
-  SET_ROLES(state: UserModuleStateType, roles: Array<string>) {
+const mutations: MutationTree<UserModuleStateType> & Mutations = {
+  [MutationTypes.SET_ROLES](state: UserModuleStateType, roles: Array<string>) {
     state.roles = roles
   },
-  SET_APPLICATIONS(state: UserModuleStateType, apps: Array<ApplicationType>) {
+  [MutationTypes.SET_APPLICATIONS](state: UserModuleStateType, apps: Array<ApplicationType>) {
     state.applications = apps
   },
-  SET_CURRENT_APP(state: UserModuleStateType, app: ApplicationType) {
+  [MutationTypes.SET_CURRENT_APP](state: UserModuleStateType, app: ApplicationType) {
     state.currentApp = app
   }
 }
 
-const actions: ActionTree<UserModuleStateType, UserModuleStateType> & Actions = {
+const actions: ActionTree<UserModuleStateType, RootState> & Actions = {
   [ActionTypes.GetInfo]({ commit }) {
     return new Promise((resolve, reject) => {
       // getInfo() 获取接口
-
       const roles = ['admin', 'editor']
-      commit(MutationTypes.SetRoles, roles)
+      commit(MutationTypes.SET_ROLES, roles)
       resolve(roles)
     })
   },
   [ActionTypes.GetApplictions]({ commit }) {
     return new Promise<void>((resolve, reject) => {
-      commit(MutationTypes.SetApplications, applications)
-      commit(MutationTypes.SetCurrentApp, applications[0])
+      commit(MutationTypes.SET_APPLICATIONS, applications)
+      commit(MutationTypes.SET_CURRENT_APP, applications[0])
       resolve()
     })
   }
@@ -79,7 +78,6 @@ const UserModule: Module<UserModuleStateType, RootState> = {
   namespaced:  true,
   state,
   mutations,
-  // @ts-ignore
   actions
 }
 

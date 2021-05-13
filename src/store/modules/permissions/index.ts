@@ -2,7 +2,7 @@ import { ActionContext, ActionTree, Module, MutationTree } from "vuex"
 import { RouterView } from 'vue-router'
 import router from '@/router'
 import { RootState } from '../../interface-types'
-import PermissionsModuleTypes, { RouteType, ChildRouteType } from './interface-types'
+import PermissionsStateTypes, { RouteType, ChildRouteType } from './interface-types'
 
 // @ts-ignore
 import asyncRoutesMap from "/public/base-admin/routes"
@@ -11,32 +11,31 @@ export enum MutationTypes {
   SetRoutes = "SET_ROUTES"
 }
 
-export type Mutations<T> = {
+export type Mutations<T = PermissionsStateTypes> = {
   [MutationTypes.SetRoutes](state: T, routes: RouteType[]): void
 }
-
 
 export enum ActionTypes {
   GenerateRoutes = "GENERATE_ROUTES"
 }
 
-type ActionArgs = Omit<ActionContext<PermissionsModuleTypes, PermissionsModuleTypes>, 'commit'> & {
-  commit<k extends keyof Mutations<PermissionsModuleTypes>>(
+type ActionArgs = Omit<ActionContext<PermissionsStateTypes, RootState>, 'commit'> & {
+  commit<k extends keyof Mutations>(
     key: k,
-    payload: Parameters<Mutations<PermissionsModuleTypes>[k]>[1]
-  ): ReturnType<Mutations<PermissionsModuleTypes>[k]>
+    payload: Parameters<Mutations[k]>[1]
+  ): ReturnType<Mutations[k]>
 }
 
 export type Actions = {
-  [ActionTypes.GenerateRoutes](context: ActionArgs): void
+  [ActionTypes.GenerateRoutes]({ commit }: ActionArgs, roles: string[]): void
 }
 
-const state = {
+const state: PermissionsStateTypes = {
   routes: []
 }
 
-const mutations: MutationTree<PermissionsModuleTypes> & Mutations<PermissionsModuleTypes> = {
-  [MutationTypes.SetRoutes](state: PermissionsModuleTypes, routes: RouteType[]) {
+const mutations: MutationTree<PermissionsStateTypes> & Mutations = {
+  [MutationTypes.SetRoutes](state: PermissionsStateTypes, routes: RouteType[]) {
     state.routes = routes
   }
 }
@@ -56,8 +55,7 @@ const handleParseChildRoutes = (childs: ChildRouteType, prePath: string): ChildR
   }
 }
 
-const actions: ActionTree<PermissionsModuleTypes, PermissionsModuleTypes> & Actions = {
-  // @ts-ignore
+const actions: ActionTree<PermissionsStateTypes, RootState> & Actions = {
   [ActionTypes.GenerateRoutes]({ commit }, roles: string[]) {
     // 可以根据 roles 来选择性返回 route
     // console.log('permissions roles', roles)
@@ -81,11 +79,10 @@ const actions: ActionTree<PermissionsModuleTypes, PermissionsModuleTypes> & Acti
   }
 }
 
-const PermissionsModule: Module<PermissionsModuleTypes, RootState> = {
+const PermissionsModule: Module<PermissionsStateTypes, RootState> = {
   namespaced: true,
   state,
   mutations,
-  // @ts-ignore
   actions
 }
 

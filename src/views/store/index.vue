@@ -48,7 +48,7 @@ export default defineComponent({
         }
       ]
 
-      store.commit(`userModule/${MutationTypes.SetApplications}`, appList)
+      store.commit(`userModule/${MutationTypes.SET_APPLICATIONS}`, appList)
     }
 
     return {

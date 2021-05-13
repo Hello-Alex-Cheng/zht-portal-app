@@ -2,6 +2,7 @@ import axios from 'axios'
 import { getToken } from './auth'
 import defaultConfig from '@/configs'
 import { message } from 'ant-design-vue'
+import router from '@/router'
 const timeout = 30 // 秒
 
 
@@ -58,8 +59,10 @@ service.interceptors.response.use(
       const { status, statusText } = error.response
       if (status === 401) {
         message.error(`接口没有权限访问，请检查接口或者参数! status: ${status} - statusText: ${statusText}.`)
+        router.push('/portal-error401')
       } else if (status === 500) {
         message.error(`哦豁崩了，请检查接口或服务器状态! status: ${status} - statusText: ${statusText}.`)
+        router.push('/portal-error500')
       } else {
         message.error(`出错啦! message: ${error.message} - statusText: ${statusText}.`)
       }

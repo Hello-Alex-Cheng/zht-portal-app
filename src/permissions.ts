@@ -19,11 +19,11 @@ interface RouteType {
   children?: ChildRouteType
 }
 
-const whiteList = ['/portal-error404', '/portal-error401', '/portal-error500']
+const whiteList = ['/portal-error404', '/portal-error401', '/portal-error500', '/login']
 
 router.beforeEach(async (to, from, next) => {
   const token = getToken()
-  const isWhite = whiteList.find(w => w === to.path)
+  const isWhite = whiteList.findIndex(w => w === to.path)
 
   NProgress.start()
 
@@ -44,7 +44,6 @@ router.beforeEach(async (to, from, next) => {
           const roles = await store.dispatch(`userModule/${userAction.GetInfo}`)
 
           const accessRoutes = await store.dispatch(`permissionsModule/${permissionAction.GenerateRoutes}`, roles)
-          // console.log('accessRoutes', accessRoutes)
 
           next({ path: '/', replace: true })
         } catch (error) {
@@ -57,6 +56,8 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next()
       NProgress.done()
+    } else if (isWhite > -1) {
+      next()
     } else {
       next('/login')
     }
@@ -64,6 +65,5 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  // console.log('全局路由后置守卫!', to, from)
   NProgress.done()
 })

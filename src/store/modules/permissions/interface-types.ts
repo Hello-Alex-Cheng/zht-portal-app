@@ -9,6 +9,6 @@ export interface RouteType {
   children?: ChildRouteType
 }
 
-export default interface LoginModuleTypes {
+export default interface PermissionsStateTypes {
   routes: Array<RouteType>
 }

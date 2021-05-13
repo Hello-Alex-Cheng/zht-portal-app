@@ -117,7 +117,7 @@ export default defineComponent({
 
 			appKey.value = selected.appPrefix
 
-			store.commit(`userModule/${MutationTypes.SetCurrentApp}`, selected)
+			store.commit(`userModule/${MutationTypes.SET_CURRENT_APP}`, selected)
 		}
 
 		// handleChange('/zht-base-admin')

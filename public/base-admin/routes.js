@@ -5,7 +5,11 @@ export default [
     component: 'Layouts',
     children: [
       { path: '', name: '', component: 'Home' }
-    ]
+    ],
+    meta: {
+      title: '首页',
+      authRoles: ['admin', 'editor']
+    }
   },
   {
     name: 'Iconfont',
@@ -13,8 +17,12 @@ export default [
     redirect: '/iconfont/base',
     component: 'Layouts',
     children: [
-      { path: 'base', name: 'IconfontBase', component: 'IconfontBase' }
-    ]
+      { path: 'base', name: 'IconfontBase', component: 'IconfontBase', meta: { title: 'iconfont图标' } }
+    ],
+    meta: {
+      title: '图标',
+      authRoles: ['admin', 'editor']
+    }
   },
   {
     name: 'Store',
