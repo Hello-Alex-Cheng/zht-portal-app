@@ -2,6 +2,7 @@
   "name": "zht-portal-app",
   "version": "0.1.0",
   "private": true,
+  "author": "Hello_AlexCc",
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
