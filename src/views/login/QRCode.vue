@@ -29,10 +29,7 @@ export default defineComponent ({
         const code = getUrlParam('code')
         request({
           baseURL: config.loginAprUrl + '?grant_type=social&scope=server&type=zht_ding&dingCode=' + code,
-          method: 'POST',
-          headers: {
-            Authorization: 'Basic dG91cjp0b3Vy'
-          }
+          method: 'POST'
         })
           .then(res => {
             const { expires_in, access_token } = res
