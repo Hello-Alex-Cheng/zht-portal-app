@@ -6,19 +6,21 @@ import { Button,
   Breadcrumb,
   Menu,
   message,
-  Select
+  Select,
+  Pagination,
+  Row,
+  Col,
+  Tabs,
+  Checkbox,
+  Divider,
+  Modal
 } from 'ant-design-vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
-import { InstallOptions } from './types'
 
 // 使用 iconfont 图标
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2299454_fvw4ct8o61.js'
 })
-
-const defaultInstallOpt = {
-  zIndex: 1000,
-}
 
 const AntdComponent = [
   Button,
@@ -36,7 +38,15 @@ const AntdComponent = [
   Menu.Item,
   Menu.SubMenu,
   Menu.ItemGroup,
-  Select
+  Select,
+  Pagination,
+  Row,
+  Col,
+  Tabs,
+  Tabs.TabPane,
+  Checkbox,
+  Divider,
+  Modal
 ]
 
 const installOtherComponents = (app: App): void => {
@@ -47,14 +57,11 @@ const installOtherComponents = (app: App): void => {
   app.config.globalProperties.$message = message
 }
 
-export default {
-  // App 是 vue 的类型
-  install: (app: App, options: InstallOptions = defaultInstallOpt ): void => {
-    installOtherComponents(app)
+export function registerGlobComp(app: App) {
+  installOtherComponents(app)
 
-    AntdComponent.forEach(comp => {
-      app.component(comp.name, comp)
-    })
-  }
+  AntdComponent.forEach(comp => {
+    app.component(comp.name || comp.displayName, comp)
+  })
 }
 

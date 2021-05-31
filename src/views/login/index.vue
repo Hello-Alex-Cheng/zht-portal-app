@@ -1,119 +1,158 @@
 <template>
   <div class="login">
-    <div class="login-box">
-      <h1>
-        hello_AlexCc
-        <icon-font type="icon-yingtao"></icon-font>
-      </h1>
-      <a-form
-        layout="inline"
-        :model="formState"
-        @finish="handleFinish"
-        @finishFailed="handleFinishFailed"
-      >
-        <a-form-item label="Username">
-          <a-input v-model:value="formState.user" placeholder="Username">
-            <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
-          </a-input>
-        </a-form-item>
-        <a-form-item label="Password">
-          <a-input v-model:value="formState.password" type="password" placeholder="Password">
-            <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-button
-            html-type="submit"
-            :disabled="formState.user === '' || formState.password === ''"
-          >
-            登 录
-          </a-button>
-        </a-form-item>
-      </a-form>
+    <div class="header">
+      <a-row type="flex" align="middle">
+        <a-col flex="1" class="col">
+          <b>中惠旅后台</b>
+        </a-col>
+        <a-col flex="1" class="col">
+          <span>首页</span>
+          <span>帮助中心</span>
+        </a-col>
+      </a-row>
     </div>
+    <div class="content">
+      <div class="login">
+        <ImgToggle ref="imgToggleRef" @showComputerOrQRCodeComp="showComputerOrQRCodeComp"></ImgToggle>
+        <LoginAndPhone ref="loginAndPhone" v-if="isComputer">
+          <a-button class="btn" type="link">免费注册</a-button>
+          <a-divider type="vertical" />
+          <a-button class="btn" type="link" @click="showForgotPassModal">忘记密码</a-button>
+        </LoginAndPhone>
+        <QRCode v-else>
+          <a-button class="btn" type="link" style="color: #333; font-size: 12px;" @click="qrBtnClicked('2')">短信登录</a-button>
+          <a-button class="btn" type="link" style="color: #333; font-size: 12px;" @click="qrBtnClicked('1')">密码登录</a-button>
+        </QRCode>
+      </div>
+    </div>
+    <div class="footer">
+      <a-row type="flex" align="middle">
+        <a-col flex="1" class="col">
+          版权所有©中惠旅智慧景区股份有限公司 保留一切权利
+        </a-col>
+        <a-col flex="1" class="col">
+          <span>中惠旅集团</span>
+          <span>惠旅智能</span>
+          <span>惠旅云</span>
+        </a-col>
+      </a-row>
+    </div>
+    <ForgotPassword ref="forgotRef"></ForgotPassword>
   </div>
 </template>
 
 <script lang="ts">
-/* eslint-disable */
-import { defineComponent, reactive, inject } from 'vue'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
-import { useRouter, useRoute } from "vue-router"
-import store from '@/store'
-import { ActionTypes } from "@/store/modules/login/index";
+import { defineComponent, ref, nextTick } from 'vue'
 
-interface FormState {
-  user: string,
-  password: string
-}
+import LoginAndPhone from './LoginAndPhone.vue'
+import ImgToggle from './ImgToggle.vue'
+import QRCode from './QRCode.vue'
+import ForgotPassword from './ForgotPassword.vue'
 
 export default defineComponent({
   name: 'Login',
   components: {
-    UserOutlined,
-    LockOutlined
+    ForgotPassword,
+    LoginAndPhone,
+    ImgToggle,
+    QRCode
   },
-  setup(props, ctx) {
-    const $message = inject('message')
-    const router = useRouter()
-    const route = useRoute()
+  setup() {
+    const isComputer = ref(true)
+    const imgToggleRef = ref(null)
+    const loginAndPhone = ref(null)
+    const forgotRef = ref(null)
 
-    // export declare type UnwrapRef<T> = T extends Ref<infer V> ? UnwrapRefSimple<V> : UnwrapRefSimple<T>;
-    const formState: FormState = reactive({
-      user: 'ztadmin',
-      password: 'aa123456'
-    })
+    const showComputerOrQRCodeComp = function(value: boolean) {
+      isComputer.value = value
+    }
 
-
-    const handleFinish = async (values: FormState) => {
-
-      store.dispatch(`loginModule/${ActionTypes.Login}`, {
-        user: formState.user,
-        psw: formState.password
+    const qrBtnClicked = function(key: string) {
+      (imgToggleRef.value as any).toggle()
+      nextTick(() => {
+        (loginAndPhone.value as any).handleTabChanged(key)
       })
     }
 
-    const handleFinishFailed = (errors: ValidateErrorEntity<FormState>) => {
-      console.log(errors);
+    const showForgotPassModal = () => {
+      (forgotRef.value as any).setVisible(true)
     }
 
     return {
-      formState,
-      handleFinish,
-      handleFinishFailed
+      showComputerOrQRCodeComp,
+      isComputer,
+      imgToggleRef,
+      forgotRef,
+      loginAndPhone,
+      qrBtnClicked,
+      showForgotPassModal
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-.login {
+@login: ~'login';
+
+.@{login} {
+  position: relative;
   width: 100%;
   height: 100vh;
-  background-color: #ccc;
-  background-image: url('../../assets/whiteSnow.png');
-  background-size: 100%;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .login-box {
-    overflow: hidden;
-    display: inline-block;
-    padding: 50px 20px;
-    background-color: rgba(225, 225, 225, .5);
-    margin-top: -240px;
-    border-radius: 1em;
-    box-shadow: 1em .5em 4em pink;
-    -webkit-box-shadow: 1em .5em 4em #ccc;
+  .ant-row {
+    height: 100%;
   }
-  .login-box > h1 {
-    letter-spacing: -0.02;
-    color: #333;
-    text-transform: capitalize;
-    &:nth-child(1) {
-      color: rgb(104, 16, 16);
+
+  .header {
+    height: 6%;
+    .col {
+      text-align: center;
+      span:nth-child(1) {
+        margin-right: 32px;
+      }
+    }
+    .col:nth-child(2) {
+      color: #999999;
+    }
+  }
+
+  .content {
+    width: 100%;
+    position: relative;
+    height: calc(100% - 16%);
+    background-color: #E6EBF1;
+    background-image: url('../../assets/login_page_img.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+
+    .@{login} {
+      position: absolute;
+      background-color: #fff;
+      box-shadow: 0px 0px 20px 0px rgba(171, 184, 196, 0.5);
+      border-radius: 3px;
+      width: 380px;
+      height: 390px;
+      right: 18.75%;
+      top: 22.93%;
+      padding: 20px 30px;
+      .btn {
+        font-size: 12px;
+        color: #333;
+      }
+    }
+  }
+
+  .footer {
+    height: 10%;
+    .col {
+      text-align: center;
+      font-size: 12px;
+      color: #555555;
+      span:nth-child(2) {
+        padding: 0 16px;
+        margin: 0 16px;
+        border-right: 1px solid #555555;
+        border-left: 1px solid #555555;
+      }
     }
   }
 }

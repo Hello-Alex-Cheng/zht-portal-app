@@ -1,7 +1,7 @@
 <template>
   <div class="store">
     <h1>store value {{globalCount}}</h1>
-    <a-button @click="crementStoreCount">create count</a-button>
+    <a-button type="primary" @click="crementStoreCount">create count</a-button>
 
     <div class="app">
       <ul>

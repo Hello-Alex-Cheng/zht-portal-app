@@ -1,5 +1,9 @@
 export default [
   {
+    path: '/',
+    redirect: '/home'
+  },
+  {
     name: 'Home',
     path: '/home',
     component: 'Layouts',

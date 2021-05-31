@@ -9,12 +9,14 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV !== 'production',
   productionSourceMap: false, // 不需要生产环境 sourcemap
   css: {
+    extract: process.env.NODE_ENV !== 'production' ? false : true,
+    sourceMap: process.env.NODE_ENV !== 'production' ? false : true,
     loaderOptions: {
       less: {
         // 安装 babel-plugin-import 按需加载插件后报错
         // 解决报错问题：.bezierEasingMixin() ^Inline JavaScript is not enabled. Is it set in your options?
         javascriptEnabled: true
-      }
+      },
     }
   },
   configureWebpack: config => {

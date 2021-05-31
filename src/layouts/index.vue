@@ -3,9 +3,18 @@
     <a-layout>
 			<a-layout-header class="header">
 				<div class="logo">
-					<icon-font type="icon-bow" style="font-size: 2em"></icon-font>
+					<icon-font type="icon-bow" style="font-size: 2em; color: pink;"></icon-font>
 				</div>
-				<div class="header">
+				<div class="header" style="background-color: #fff;">
+					<!-- 控制菜单栏收缩展开 -->
+					<menu-unfold-outlined
+						v-if="collapsed"
+						class="trigger"
+						@click="() => (collapsed = !collapsed)"
+					/>
+					<menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+
+					<!-- 切换应用 select -->
 					<a-select
 						ref="select"
 						v-model:value="appKey"
@@ -20,7 +29,11 @@
 				</div>
 			</a-layout-header>
 			<a-layout>
-				<a-layout-sider width="200" style="background: #fff">
+				<!--
+					collapsedWidth: 收缩宽度，设置为 0 会出现特殊 trigger
+					trigger: null 表示隐藏系统特殊的 trigger
+				-->
+				<a-layout-sider v-model:collapsed="collapsed" :collapsedWidth="80" :trigger="null" collapsible style="background: #fff;">
 					<a-menu
 						mode="inline"
 						v-model:selectedKeys="activeMenuKey"
@@ -84,6 +97,7 @@ import { useStore } from '@/store'
 import useSingleSpa from  '@/single-spa'
 import { ApplicationType } from '@/store/modules/user/interface-types'
 import { MutationTypes } from "@/store/modules/user/index"
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 
 // @ts-ignore
 import applications from "/public/base-admin/menus"
@@ -94,7 +108,9 @@ export default defineComponent({
     msg: String
   },
 	components: {
-		'a-select-option': Select.Option
+		'a-select-option': Select.Option,
+		MenuFoldOutlined,
+		MenuUnfoldOutlined
 	},
   setup () {
 		const router = useRouter()

@@ -56,10 +56,10 @@ service.interceptors.response.use(
     // 如果是 403 就没有 error.response 属性了
     // { response, message, request, config } = error
     if (error.response) {
-      const { status, statusText } = error.response
+      const { status, statusText, data } = error.response
       if (status === 401) {
-        message.error(`接口没有权限访问，请检查接口或者参数! status: ${status} - statusText: ${statusText}.`)
-        router.push('/portal-error401')
+        message.error(`接口没有权限访问，请检查接口或者参数! status: ${status} - statusText: ${data.message}.`)
+        // router.push('/portal-error401')
       } else if (status === 500) {
         message.error(`哦豁崩了，请检查接口或服务器状态! status: ${status} - statusText: ${statusText}.`)
         router.push('/portal-error500')

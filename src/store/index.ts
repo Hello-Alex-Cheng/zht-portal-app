@@ -1,3 +1,4 @@
+import { App } from 'vue'
 import { createStore, useStore as bsaeUseStore, GetterTree } from "vuex"
 import getters from './getters'
 import loginModule from './modules/login/index'
@@ -26,6 +27,10 @@ const store = createStore<RootState>({
 // Simplifying useStore usage
 export function useStore<T = AllStateTypes>() {
   return bsaeUseStore<T>(key)
+}
+
+export function setupStore(app: App) {
+  app.use(store, key)
 }
 
 export default store

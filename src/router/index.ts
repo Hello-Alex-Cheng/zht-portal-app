@@ -1,11 +1,11 @@
+import { App } from 'vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { createRouter, createWebHistory } from 'vue-router'
-
-const constantRoutes = [
-  {
-    path: '/',
-    redirect: '/home'
-  },
+const constantRoutes: RouteRecordRaw[] = [
+  // {
+  //   path: '/',
+  //   redirect: '/home'
+  // },
   {
     path: '/login',
     component: () => import(/* webpackChunkName: "Login" */ '@/views/login/index.vue')
@@ -28,7 +28,15 @@ const constantRoutes = [
   }
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoutes
+  routes: constantRoutes,
+  scrollBehavior: () => ({ left: 0, top: 0 })
 })
+
+
+export function setupRouter(app: App) {
+  app.use(router)
+}
+
+export default router

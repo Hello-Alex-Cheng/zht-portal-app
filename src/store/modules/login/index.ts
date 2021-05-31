@@ -7,10 +7,11 @@ import { setToken } from '@/utils/auth'
 import { portalLogin } from '@/api/login'
 import router from '@/router'
 
-interface ApiResponse extends AxiosResponse {
+export interface ApiResponse extends AxiosResponse {
   code: number,
   msg: string,
-  data: any
+  data: any,
+  errmsg?: string
 }
 
 export enum MutationTypes {
@@ -33,10 +34,11 @@ const mutations: MutationTree<LoginModuleTypes> & Mutations<LoginModuleTypes> = 
 }
 
 export enum ActionTypes {
-  Login = "LOGIN"
+  Login = "LOGIN",
+  PhoneLogin = "PHONE_LOGIN"
 }
 
-type ActionArgs = Omit<ActionContext<LoginModuleTypes, LoginModuleTypes>, 'commit'> & {
+type ActionArgs = Omit<ActionContext<LoginModuleTypes, RootState>, 'commit'> & {
   commit<k extends keyof Mutations<LoginModuleTypes>>(
     key: k,
     payload: Parameters<Mutations<LoginModuleTypes>[k]>[1]
@@ -44,12 +46,13 @@ type ActionArgs = Omit<ActionContext<LoginModuleTypes, LoginModuleTypes>, 'commi
 }
 
 export type Actions = {
-  [ActionTypes.Login](context: ActionArgs, payload: { user: string, psw: string }): void
+  [ActionTypes.Login](context: ActionArgs, payload: { type: string, user: string, psw: string }): void
 }
 
-const actions: ActionTree<LoginModuleTypes, LoginModuleTypes> & Actions = {
-  async [ActionTypes.Login]({ commit }, { user, psw}) {
-    const res: AxiosResponse = await portalLogin('zht_password', user, psw)
+const actions: ActionTree<LoginModuleTypes, RootState> & Actions = {
+  async [ActionTypes.Login]({ commit }, { type, user, psw }) {
+    const res: AxiosResponse = await portalLogin(type, user, psw)
+
     if ((res as ApiResponse).code === 0) {
       const { access_token } = res.data
       commit(MutationTypes.UpdateToken, access_token)
@@ -70,7 +73,6 @@ const LoginModule: Module<LoginModuleTypes, RootState> = {
     username: ''
   },
   mutations,
-  // @ts-ignore
   actions
 }
 

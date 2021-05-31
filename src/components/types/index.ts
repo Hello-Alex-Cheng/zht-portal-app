@@ -2,3 +2,7 @@
 export interface InstallOptions {
   zIndex: number
 }
+
+const defaultInstallOpt = {
+  zIndex: 1000,
+}
